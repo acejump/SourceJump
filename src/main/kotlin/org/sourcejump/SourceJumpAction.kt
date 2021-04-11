@@ -1,4 +1,4 @@
-package edu.mcgill.sourcejump
+package org.sourcejump
 
 import com.intellij.find.*
 import com.intellij.notification.*
@@ -8,16 +8,9 @@ import com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.project.*
-import edu.mcgill.sourcejump.config.SJConfig
-import org.kohsuke.github.*
 import java.io.File
 
-class FetchResultsFromGithubAction: DumbAwareAction() {
-  val token get() = SJConfig.githubToken
-  val github get() = GitHubBuilder().withJwtToken(token).build()
-
-  val logger = thisLogger()
-
+class SourceJumpAction: DumbAwareAction() {
   fun notify(
     project: Project?,
     content: String?,
@@ -28,12 +21,13 @@ class FetchResultsFromGithubAction: DumbAwareAction() {
     .notify(project)
 
   override fun actionPerformed(e: AnActionEvent) {
-    if (token.isEmpty()) {
+    if (GitHub.isTokenValid()) {
       notify(
         e.project,
-        "SourceJump needs a GitHub Personal Access token. Create one " +
-          "<a href=\"https://github.com/settings/tokens/new\">here</a>.\n" +
-          "Then paste it in Settings | Tools | SourceJump.",
+        """Your GitHub token is either invalid or unavailable.
+          <a href="https://github.com/settings/tokens/new">Create a new</a>
+          personal access token then add it to Settings | Tools | SourceJump.
+        """.trimIndent(),
         ERROR
       )
       return
@@ -48,10 +42,7 @@ class FetchResultsFromGithubAction: DumbAwareAction() {
     } ?: return
 
     // Don't bother fetching short or empty queries
-    if (query.isNullOrEmpty() ||
-      ext.isNullOrEmpty() ||
-      query.length < 2
-    ) {
+    if (query.isNullOrEmpty() || ext.isNullOrEmpty() || query.length < 2) {
       notify(e.project, "No query was selected.", WARNING)
       return
     }
@@ -61,7 +52,7 @@ class FetchResultsFromGithubAction: DumbAwareAction() {
     if (!queryDir.exists()) {
       notify(e.project, "Searching .$ext files on GitHub for: \"$query\"")
 
-      val results = github.fetchResults(query, ext)
+      val results = GitHub.fetchResults(query, ext)
 //    results.sortedBy { it. } TODO
       results.store(queryDir, ext)
 
@@ -74,27 +65,6 @@ class FetchResultsFromGithubAction: DumbAwareAction() {
     showResults(e.project, queryDir, query)
   }
 
-  private fun List<GHContent>.store(tempDir: File, extension: String) {
-    tempDir.mkdirs()
-    val tempPath = tempDir.absolutePath
-    forEachIndexed { i, result ->
-      if (result.isFile) return@forEachIndexed
-      result.read().use {
-        File("$tempPath/${i}_" + result.name)
-          .apply { writeOrigin(result, extension) }
-          .appendBytes(it.readAllBytes())
-      }
-    }
-  }
-
-  private fun File.writeOrigin(result: GHContent, extension: String) =
-    writeText(when (extension) {
-      "java", "kt" -> "//"
-      "py" -> "#"
-      // TODO: Others?
-      else -> null
-    }?.let { "$it ${result.htmlUrl}\n\n" } ?: "")
-
   private fun showResults(
     project: Project?,
     tempDir: File,
@@ -106,17 +76,4 @@ class FetchResultsFromGithubAction: DumbAwareAction() {
     isProjectScope = false
     isSearchInProjectFiles = false
   }) {}
-
-  private fun GitHub.fetchResults(
-    selectedText: String,
-    extension: String,
-  ) = try {
-    searchContent()
-      .q(selectedText)
-      .extension(extension)
-      .list().take(SJConfig.numResults)
-  } catch (exception: Exception) {
-    logger.error(exception)
-    emptyList<GHContent>()
-  }
 }

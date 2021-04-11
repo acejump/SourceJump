@@ -1,4 +1,4 @@
-package edu.mcgill.sourcejump.config
+package org.sourcejump.config
 
 data class SJSettings(
   var githubToken: String = "",

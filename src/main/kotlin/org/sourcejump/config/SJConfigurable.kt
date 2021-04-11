@@ -1,7 +1,7 @@
-package edu.mcgill.sourcejump.config
+package org.sourcejump.config
 
 import com.intellij.openapi.options.Configurable
-import edu.mcgill.sourcejump.config.SJConfig.Companion.settings
+import org.sourcejump.config.SJConfig.Companion.settings
 
 class SJConfigurable: Configurable {
   private val panel by lazy(::SJSettingsPanel)

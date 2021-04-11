@@ -1,5 +1,5 @@
 <idea-plugin>
-    <id>edu.mcgill.sourcejump</id>
+    <id>org.sourcejump</id>
     <name>SourceJump</name>
     <vendor url="https://github.com/acejump/SourceJump">SourceJump</vendor>
 
@@ -13,9 +13,9 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService
-                serviceImplementation="edu.mcgill.sourcejump.config.SJConfig"/>
+                serviceImplementation="org.sourcejump.config.SJConfig"/>
         <applicationConfigurable groupId="tools" displayName="SourceJump"
-                                 instance="edu.mcgill.sourcejump.config.SJConfigurable"
+                                 instance="org.sourcejump.config.SJConfigurable"
                                  id="preferences.SourceJumpConfig"
                                  dynamic="true"/>
 
@@ -25,8 +25,8 @@
 
     <actions>
         <action id="FetchResultsFromGithubAction"
-                class="edu.mcgill.sourcejump.FetchResultsFromGithubAction"
-                text="Fetches results matching selected text from GitHub">
+                class="org.sourcejump.SourceJumpAction"
+                text="Searches GitHub for Selected Text">
             <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl QUOTE"/>
             <keyboard-shortcut keymap="Mac OS X 10.5+"
                                first-keystroke="ctrl QUOTE"/>
