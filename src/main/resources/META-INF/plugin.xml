@@ -3,9 +3,9 @@
     <name>SourceJump</name>
     <vendor url="https://github.com/acejump/SourceJump">SourceJump</vendor>
 
-    <description><![CDATA[
-    Searches for highlighted text on GitHub.<br>
-    ]]></description>
+    <description>
+    Searches for highlighted text on GitHub.
+    </description>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
          on how to target different products -->

@@ -29,6 +29,6 @@ To build the plugin, run the following command from the parent directory:
 ```
 
 <!-- Badges -->
-[plugin-repo-page]: https://plugins.jetbrains.com/plugin/7910-idear
-[plugin-repo-svg]: https://img.shields.io/jetbrains/plugin/v/7910-idear.svg
-[plugin-download-svg]: https://img.shields.io/jetbrains/plugin/d/7910-idear.svg
+[plugin-repo-page]: https://plugins.jetbrains.com/plugin/16512-sourcejump
+[plugin-repo-svg]: https://img.shields.io/jetbrains/plugin/v/16512-sourcejump.svg
+[plugin-download-svg]: https://img.shields.io/jetbrains/plugin/d/16512-sourcejump.svg
