@@ -12,7 +12,8 @@ import kotlin.reflect.KProperty
 
 class SJSettingsPanel {
   private val ghTokenField = JBTextField("")
-  private val numResultsCB = ComboBox((1..20).toList().toTypedArray())
+  private val numResultsCB =
+    ComboBox((1..10).map { it * 20 }.toList().toTypedArray())
 
   internal val rootPanel: JPanel = panel {
     fun Cell.short(component: JComponent) = component(growPolicy = SHORT_TEXT)
@@ -25,11 +26,11 @@ class SJSettingsPanel {
   }
 
   internal var ghToken by ghTokenField
-  internal var numResults by numResultsCB
+  internal var maxResults by numResultsCB
 
   fun reset(settings: SJSettings) {
     ghToken = settings.githubToken
-    numResults = settings.resultsToFetch
+    maxResults = settings.maxResults
   }
 
   private operator fun JTextComponent.getValue(

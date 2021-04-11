@@ -12,12 +12,12 @@ class SJConfigurable: Configurable {
 
   override fun isModified() =
     panel.ghToken != settings.githubToken ||
-      panel.numResults != settings.resultsToFetch
+      panel.maxResults != settings.maxResults
 
 
   override fun apply() {
     settings.githubToken = panel.ghToken
-    settings.resultsToFetch = panel.numResults
+    settings.maxResults = panel.maxResults
   }
 
   override fun reset() = panel.reset(settings)

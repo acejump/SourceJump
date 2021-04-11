@@ -14,7 +14,7 @@ class SJConfig: PersistentStateComponent<SJSettings> {
       get() = ServiceManager.getService(SJConfig::class.java).settings
 
     val githubToken get() = settings.githubToken
-    val numResults get() = settings.resultsToFetch
+    val maxResults get() = settings.maxResults
   }
 
   override fun getState() = settings

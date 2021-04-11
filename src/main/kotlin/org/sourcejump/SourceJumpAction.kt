@@ -5,26 +5,27 @@ import com.intellij.notification.*
 import com.intellij.notification.NotificationType.*
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR
+import com.intellij.openapi.application.*
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.project.*
+import com.intellij.openapi.util.NlsSafe
+import org.jetbrains.annotations.Nullable
 import java.io.File
 
 class SourceJumpAction: DumbAwareAction() {
-  fun notify(
-    project: Project?,
+  fun Project.notify(
     content: String?,
     type: NotificationType = INFORMATION
   ) = NotificationGroupManager.getInstance()
     .getNotificationGroup("sourcejump")
     .createNotification(content!!, type)
-    .notify(project)
+    .notify(this)
 
   override fun actionPerformed(e: AnActionEvent) {
     val (project, editor) = e.project to e.getData(EDITOR)
 
     if (!GitHub.isTokenValid()) {
-      notify(
-        project,
+      project?.notify(
         """Your GitHub token is either invalid or unavailable.
           <a href="https://github.com/settings/tokens/new">Create a new</a>
           personal access token then add it to Settings | Tools | SourceJump.
@@ -44,23 +45,29 @@ class SourceJumpAction: DumbAwareAction() {
 
     // Don't bother fetching short or empty queries
     if (query.isNullOrEmpty() || ext.isNullOrEmpty() || query.length < 2) {
-      notify(project, "No query was selected.", WARNING)
+      project?.notify("No query was selected.", WARNING)
       return
     }
 
+    project?.notify(
+      """Searching .$ext files on GitHub for: "$query"
+        GitHub Rate limit: ${GitHub.remaining}/${GitHub.limit}
+        """.trimMargin()
+    )
+
+    Thread { runSearch(query, ext, project) }.start()
+  }
+
+  fun runSearch(query: String, ext: String, project: Project?)  {
     val queryDir = File("$tempDir/${query.hashCode()}/")
-
     if (!queryDir.exists()) {
-      notify(project, "Searching .$ext files on GitHub for: \"$query\"")
 
-      val results = GitHub.fetchResults(query, ext)
-//    results.sortedBy { it. } TODO
+      val results = GitHub.searchCode(query, ext)
+      //    results.sortedBy { it. } TODO
       results.store(queryDir, ext)
 
-      if (results.isEmpty()) {
-        notify(project, "No results found!\"$query\"", WARNING)
-        return
-      }
+      if (results.isEmpty())
+        project?.notify("No results found!\"$query\"", WARNING)
     }
 
     showResults(project, queryDir, query)
@@ -70,11 +77,14 @@ class SourceJumpAction: DumbAwareAction() {
     project: Project?,
     tempDir: File,
     selectedText: String
-  ) = FindManager.getInstance(project).showFindDialog(FindModel().apply {
-    stringToFind = selectedText
-    isCaseSensitive = true
-    directoryName = tempDir.absolutePath
-    isProjectScope = false
-    isSearchInProjectFiles = false
-  }) {}
+  ) = runInEdt {
+    FindManager.getInstance(project)
+      .showFindDialog(FindModel().apply {
+        stringToFind = selectedText
+        isCaseSensitive = true
+        directoryName = tempDir.absolutePath
+        isProjectScope = false
+        isSearchInProjectFiles = false
+      }) {}
+  }
 }

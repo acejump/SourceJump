@@ -2,6 +2,7 @@ package org.sourcejump
 
 import com.intellij.openapi.diagnostic.thisLogger
 import org.kohsuke.github.*
+import org.kohsuke.github.GHIssueSearchBuilder.Sort.COMMENTS
 import org.sourcejump.config.SJConfig
 
 object GitHub {
@@ -11,14 +12,23 @@ object GitHub {
 
   fun isTokenValid() = github.isCredentialValid
 
-  fun fetchResults(
-    selectedText: String,
-    extension: String,
-  ) = try {
+  fun searchIssues(query: String) = try {
+    github.searchIssues()
+      .q(query).sort(COMMENTS)
+      .list().take(SJConfig.maxResults).toList()
+  } catch (exception: Exception) {
+    logger.error(exception)
+    emptyList<GHIssue>()
+  }
+
+  val remaining get() = github.rateLimit.search.remaining
+
+  val limit get() = github.rateLimit.search.limit
+
+  fun searchCode(query: String, extension: String) = try {
     github.searchContent()
-      .q(selectedText)
-      .extension(extension)
-      .list().take(SJConfig.numResults)
+      .q(query).extension(extension)
+      .list().take(SJConfig.maxResults).toList()
   } catch (exception: Exception) {
     logger.error(exception)
     emptyList<GHContent>()
