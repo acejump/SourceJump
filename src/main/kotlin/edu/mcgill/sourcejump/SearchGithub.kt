@@ -1,14 +1,14 @@
 package edu.mcgill.sourcejump
 
+import com.intellij.find.*
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR
 import com.intellij.openapi.diagnostic.thisLogger
-import com.intellij.openapi.fileEditor.*
-import com.intellij.openapi.project.DumbAwareAction
-import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.openapi.fileEditor.FileDocumentManager
+import com.intellij.openapi.project.*
 import edu.mcgill.sourcejump.config.SJConfig
 import org.kohsuke.github.*
-import java.nio.file.Files
+import java.io.File
 
 class FetchResultsFromGithubAction: DumbAwareAction() {
   val token by lazy { SJConfig.githubToken }
@@ -31,29 +31,54 @@ class FetchResultsFromGithubAction: DumbAwareAction() {
       selectedText.length < 2
     ) return
 
-    val results = github.fetchResults(selectedText, extension)
+    val queryDir = File("$tempDir/${selectedText.hashCode()}/")
 
-    if (results.isEmpty()) return
+    if (!queryDir.exists()) {
+      val results = github.fetchResults(selectedText, extension)
+//    results.sortedBy { it. } TODO
+      results.store(queryDir, extension)
 
-    val display =
-      results.joinToString("\n\n") { it.htmlUrl + "\n" + it.content + "\n" }
+      if (results.isEmpty()) return
+    }
 
-    logger.warn("Found ${results.size} results on GitHub")
-
-    val ioFile = Files.createTempFile(selectedText, ".txt").toFile()
-      .apply { writeText(display) }
-
-    logger.warn("Wrote file to ${ioFile.path}")
-
-    val file = LocalFileSystem.getInstance().findFileByIoFile(ioFile)!!
-
-    FileEditorManager.getInstance(e.project!!)
-      .openTextEditor(OpenFileDescriptor(e.project!!, file), true)
+    showResults(e.project, queryDir, selectedText)
   }
+
+  private fun List<GHContent>.store(tempDir: File, extension: String) {
+    tempDir.mkdirs()
+    val tempPath = tempDir.absolutePath
+    forEachIndexed { i, result ->
+      if (result.isFile) return@forEachIndexed
+      result.read().use {
+        File("$tempPath/${i}_" + result.name)
+          .apply { writeOrigin(result, extension) }
+          .appendBytes(it.readAllBytes())
+      }
+    }
+  }
+
+  private fun File.writeOrigin(result: GHContent, extension: String) =
+    writeText(when (extension) {
+      "java", "kt" -> "//"
+      "py" -> "#"
+      // TODO: Others?
+      else -> null
+    }?.let { "$it ${result.htmlUrl}\n\n" } ?: "")
+
+  private fun showResults(
+    project: Project?,
+    tempDir: File,
+    selectedText: String
+  ) = FindManager.getInstance(project).showFindDialog(FindModel().apply {
+    stringToFind = selectedText
+    directoryName = tempDir.absolutePath
+    isProjectScope = false
+    isSearchInProjectFiles = false
+  }) {}
 
   private fun GitHub.fetchResults(
     selectedText: String,
-    extension: String
+    extension: String,
   ) = try {
     searchContent()
       .q(selectedText)
