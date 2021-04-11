@@ -17,7 +17,7 @@ repositories.mavenCentral()
 dependencies {
   implementation(kotlin("stdlib"))
   implementation("org.kohsuke:github-api:1.127")
-  implementation("info.debatty:java-string-similarity:2.0.0")
+//  implementation("info.debatty:java-string-similarity:2.0.0")
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
