@@ -101,6 +101,7 @@ class FetchResultsFromGithubAction: DumbAwareAction() {
     selectedText: String
   ) = FindManager.getInstance(project).showFindDialog(FindModel().apply {
     stringToFind = selectedText
+    isCaseSensitive = true
     directoryName = tempDir.absolutePath
     isProjectScope = false
     isSearchInProjectFiles = false
