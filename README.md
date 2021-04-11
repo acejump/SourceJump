@@ -17,3 +17,10 @@ SourceJump will need you to provide a
 [Github Personal Access token](https://github.com/settings/tokens).
 Generate [a new one](https://github.com/settings/tokens/new) and paste
 the token into `Settings | Tools | SourceJump | GitHub token`.
+
+## Building
+
+To build the plugin, run the following command from the parent directory:
+```
+./gradlew buildPlugin
+```
