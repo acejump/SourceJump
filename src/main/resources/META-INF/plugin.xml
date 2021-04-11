@@ -1,10 +1,7 @@
 <idea-plugin>
     <id>edu.mcgill.sourcejump</id>
     <name>SourceJump</name>
-    <vendor email="breandan.considine@mail.mcgill.ca"
-            url="https://www.cs.mcgill.ca/~jguo/lab.html">The McGill Software
-        Technology Lab
-    </vendor>
+    <vendor url="https://github.com/acejump/SourceJump">SourceJump</vendor>
 
     <description><![CDATA[
     Searches for highlighted text on GitHub.<br>
@@ -22,6 +19,7 @@
                                  id="preferences.SourceJumpConfig"
                                  dynamic="true"/>
 
+        <notificationGroup id="sourcejump" displayType="BALLOON"/>
         <!-- Add your extensions here -->
     </extensions>
 

@@ -1,6 +1,8 @@
 package edu.mcgill.sourcejump
 
 import com.intellij.find.*
+import com.intellij.notification.*
+import com.intellij.notification.NotificationType.*
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR
 import com.intellij.openapi.diagnostic.thisLogger
@@ -11,13 +13,33 @@ import org.kohsuke.github.*
 import java.io.File
 
 class FetchResultsFromGithubAction: DumbAwareAction() {
-  val token by lazy { SJConfig.githubToken }
-  val github by lazy { GitHubBuilder().withJwtToken(token).build() }
+  val token get() = SJConfig.githubToken
+  val github get() = GitHubBuilder().withJwtToken(token).build()
 
   val logger = thisLogger()
 
+  fun notify(
+    project: Project?,
+    content: String?,
+    type: NotificationType = INFORMATION
+  ) = NotificationGroupManager.getInstance()
+    .getNotificationGroup("sourcejump")
+    .createNotification(content!!, type)
+    .notify(project)
+
   override fun actionPerformed(e: AnActionEvent) {
-    val (selectedText, extension) = e.getData(EDITOR)?.let {
+    if (token.isEmpty()) {
+      notify(
+        e.project,
+        "SourceJump needs a GitHub Personal Access token. Create one " +
+          "<a href=\"https://github.com/settings/tokens/new\">here</a>.\n" +
+          "Then paste it in Settings | Tools | SourceJump.",
+        ERROR
+      )
+      return
+    }
+
+    val (query, ext) = e.getData(EDITOR)?.let {
       val ext = FileDocumentManager.getInstance()
         .getFile(it.document)?.extension
       if (it.selectionModel.selectedText.isNullOrEmpty())
@@ -26,22 +48,30 @@ class FetchResultsFromGithubAction: DumbAwareAction() {
     } ?: return
 
     // Don't bother fetching short or empty queries
-    if (selectedText.isNullOrEmpty() ||
-      extension.isNullOrEmpty() ||
-      selectedText.length < 2
-    ) return
-
-    val queryDir = File("$tempDir/${selectedText.hashCode()}/")
-
-    if (!queryDir.exists()) {
-      val results = github.fetchResults(selectedText, extension)
-//    results.sortedBy { it. } TODO
-      results.store(queryDir, extension)
-
-      if (results.isEmpty()) return
+    if (query.isNullOrEmpty() ||
+      ext.isNullOrEmpty() ||
+      query.length < 2
+    ) {
+      notify(e.project, "No query was selected.", WARNING)
+      return
     }
 
-    showResults(e.project, queryDir, selectedText)
+    val queryDir = File("$tempDir/${query.hashCode()}/")
+
+    if (!queryDir.exists()) {
+      notify(e.project, "Searching .$ext files on GitHub for: \"$query\"")
+
+      val results = github.fetchResults(query, ext)
+//    results.sortedBy { it. } TODO
+      results.store(queryDir, ext)
+
+      if (results.isEmpty()) {
+        notify(e.project, "No results found!\"$query\"", WARNING)
+        return
+      }
+    }
+
+    showResults(e.project, queryDir, query)
   }
 
   private fun List<GHContent>.store(tempDir: File, extension: String) {
