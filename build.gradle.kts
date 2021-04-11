@@ -44,6 +44,7 @@ tasks {
   }
 
   patchPluginXml {
+    sinceBuild("203.7717.56")
     changeNotes(closure {
       changelog.getAll().values.take(2).last().toHTML()
     })
