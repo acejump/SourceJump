@@ -5,7 +5,6 @@ import com.intellij.notification.*
 import com.intellij.notification.NotificationType.*
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR
-import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.project.*
 import java.io.File
@@ -21,7 +20,7 @@ class SourceJumpAction: DumbAwareAction() {
     .notify(project)
 
   override fun actionPerformed(e: AnActionEvent) {
-    if (GitHub.isTokenValid()) {
+    if (!GitHub.isTokenValid()) {
       notify(
         e.project,
         """Your GitHub token is either invalid or unavailable.

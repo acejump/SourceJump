@@ -5,7 +5,7 @@ import org.kohsuke.github.*
 import org.sourcejump.config.SJConfig
 
 object GitHub {
-  val logger = thisLogger()
+  private val logger = thisLogger()
   private val token get() = SJConfig.githubToken
   private val github get() = GitHubBuilder().withJwtToken(token).build()
 
