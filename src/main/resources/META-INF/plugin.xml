@@ -1,0 +1,32 @@
+<idea-plugin>
+    <id>org.example.sourcejump</id>
+    <name>sourcejump</name>
+    <vendor email="breandan.considine@mail.mcgill.ca" url="https://www.cs.mcgill.ca/~jguo/lab.html">The McGill Software Technology Lab</vendor>
+
+    <description><![CDATA[
+    Searches for highlighted text on GitHub.<br>
+    ]]></description>
+
+    <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
+         on how to target different products -->
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceImplementation="edu.mcgill.sourcejump.config.SJConfig"/>
+        <applicationConfigurable groupId="tools" displayName="SourceJump"
+                                 instance="edu.mcgill.sourcejump.config.SJConfigurable"
+                                 id="preferences.SourceJumpConfig" dynamic="true"/>
+
+        <!-- Add your extensions here -->
+    </extensions>
+
+    <actions>
+        <action id="FetchResultsFromGithubAction"
+                class="edu.mcgill.sourcejump.FetchResultsFromGithubAction"
+                text="Fetches results matching highlighted text from GitHub">
+            <keyboard-shortcut keymap="Mac OS X" first-keystroke="ctrl QUOTE"/>
+            <keyboard-shortcut keymap="Mac OS X 10.5+" first-keystroke="ctrl QUOTE"/>
+            <keyboard-shortcut keymap="$default" first-keystroke="ctrl QUOTE"/>
+        </action>
+    </actions>
+</idea-plugin>
