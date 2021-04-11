@@ -20,9 +20,11 @@ class SourceJumpAction: DumbAwareAction() {
     .notify(project)
 
   override fun actionPerformed(e: AnActionEvent) {
+    val (project, editor) = e.project to e.getData(EDITOR)
+
     if (!GitHub.isTokenValid()) {
       notify(
-        e.project,
+        project,
         """Your GitHub token is either invalid or unavailable.
           <a href="https://github.com/settings/tokens/new">Create a new</a>
           personal access token then add it to Settings | Tools | SourceJump.
@@ -32,7 +34,7 @@ class SourceJumpAction: DumbAwareAction() {
       return
     }
 
-    val (query, ext) = e.getData(EDITOR)?.let {
+    val (query, ext) = editor?.let {
       val ext = FileDocumentManager.getInstance()
         .getFile(it.document)?.extension
       if (it.selectionModel.selectedText.isNullOrEmpty())
@@ -42,26 +44,26 @@ class SourceJumpAction: DumbAwareAction() {
 
     // Don't bother fetching short or empty queries
     if (query.isNullOrEmpty() || ext.isNullOrEmpty() || query.length < 2) {
-      notify(e.project, "No query was selected.", WARNING)
+      notify(project, "No query was selected.", WARNING)
       return
     }
 
     val queryDir = File("$tempDir/${query.hashCode()}/")
 
     if (!queryDir.exists()) {
-      notify(e.project, "Searching .$ext files on GitHub for: \"$query\"")
+      notify(project, "Searching .$ext files on GitHub for: \"$query\"")
 
       val results = GitHub.fetchResults(query, ext)
 //    results.sortedBy { it. } TODO
       results.store(queryDir, ext)
 
       if (results.isEmpty()) {
-        notify(e.project, "No results found!\"$query\"", WARNING)
+        notify(project, "No results found!\"$query\"", WARNING)
         return
       }
     }
 
-    showResults(e.project, queryDir, query)
+    showResults(project, queryDir, query)
   }
 
   private fun showResults(
