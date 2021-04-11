@@ -1,5 +1,8 @@
 # SourceJump
 
+[![][plugin-repo-svg]][plugin-repo-page]
+[![][plugin-download-svg]][plugin-repo-page]
+
 ## Usage
 
 Select some text in the editor and press <kbd>Ctrl</kbd>+<kbd>'</kbd> to
@@ -24,3 +27,8 @@ To build the plugin, run the following command from the parent directory:
 ```
 ./gradlew buildPlugin
 ```
+
+<!-- Badges -->
+[plugin-repo-page]: https://plugins.jetbrains.com/plugin/7910-idear
+[plugin-repo-svg]: https://img.shields.io/jetbrains/plugin/v/7910-idear.svg
+[plugin-download-svg]: https://img.shields.io/jetbrains/plugin/d/7910-idear.svg
