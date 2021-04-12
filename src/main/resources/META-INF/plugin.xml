@@ -4,7 +4,11 @@
     <vendor url="https://github.com/acejump/SourceJump">SourceJump</vendor>
 
     <description>
-    Searches for highlighted text on GitHub.
+        SourceJump searches and retrieves selected text on GitHub, without leaving the IDE.
+
+        Select a token or short string in the editor and press Ctrl+' to start a new search.
+
+        SourceJump will display results matching the highlighted text, sorted by contextual similarity to the caret location.
     </description>
 
     <!-- please see https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html
