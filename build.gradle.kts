@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   id("org.jetbrains.intellij") version "0.7.2"
-  kotlin("jvm") version "1.4.32"
+  kotlin("jvm") version "1.5.0-RC"
   id("org.jetbrains.changelog") version "1.1.2"
   id("com.github.ben-manes.versions") version "0.38.0"
 }
@@ -34,7 +34,7 @@ changelog {
 }
 
 tasks {
-  withType<KotlinCompile> {
+  compileKotlin {
     kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
   }
 

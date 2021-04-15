@@ -30,9 +30,8 @@ class SourceJumpAction: DumbAwareAction() {
           <a href="https://github.com/settings/tokens/new">Create a new</a>
           personal access token then add it to Settings | Tools | SourceJump.
         """.trimIndent(),
-        ERROR
+        WARNING
       )
-      return
     }
 
     val (query, ext) = editor?.let {
