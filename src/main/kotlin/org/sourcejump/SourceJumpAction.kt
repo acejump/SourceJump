@@ -2,14 +2,13 @@ package org.sourcejump
 
 import com.intellij.find.*
 import com.intellij.notification.*
-import com.intellij.notification.NotificationType.*
+import com.intellij.notification.NotificationType.INFORMATION
+import com.intellij.notification.NotificationType.WARNING
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR
-import com.intellij.openapi.application.*
+import com.intellij.openapi.application.runInEdt
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.project.*
-import com.intellij.openapi.util.NlsSafe
-import org.jetbrains.annotations.Nullable
 import java.io.File
 
 class SourceJumpAction: DumbAwareAction() {

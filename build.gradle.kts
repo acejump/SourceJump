@@ -1,3 +1,4 @@
+import org.gradle.api.JavaVersion.VERSION_11
 import org.jetbrains.changelog.*
 import org.jetbrains.intellij.tasks.PublishTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -35,7 +36,7 @@ changelog {
 
 tasks {
   compileKotlin {
-    kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
+    kotlinOptions.jvmTarget = VERSION_11.toString()
   }
 
   withType<PublishTask> {

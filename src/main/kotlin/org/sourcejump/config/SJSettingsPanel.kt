@@ -4,7 +4,8 @@ import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.ColorPanel
 import com.intellij.ui.components.JBTextField
 import com.intellij.ui.layout.*
-import com.intellij.ui.layout.GrowPolicy.*
+import com.intellij.ui.layout.GrowPolicy.MEDIUM_TEXT
+import com.intellij.ui.layout.GrowPolicy.SHORT_TEXT
 import java.awt.Color
 import javax.swing.*
 import javax.swing.text.JTextComponent
