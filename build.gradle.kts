@@ -1,7 +1,6 @@
 import org.gradle.api.JavaVersion.VERSION_11
 import org.jetbrains.changelog.*
 import org.jetbrains.intellij.tasks.PublishTask
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   id("org.jetbrains.intellij") version "0.7.2"

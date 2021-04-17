@@ -13,8 +13,7 @@ object GitHub {
   fun isTokenValid() = github.isCredentialValid
 
   fun searchIssues(query: String) = try {
-    github.searchIssues()
-      .q(query).sort(COMMENTS)
+    github.searchIssues().q(query).sort(COMMENTS)
       .list().take(SJConfig.maxResults).toList()
   } catch (exception: Exception) {
     logger.error(exception)

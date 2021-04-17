@@ -31,6 +31,7 @@ class SourceJumpAction: DumbAwareAction() {
         """.trimIndent(),
         WARNING
       )
+      return
     }
 
     val (query, ext) = editor?.let {
