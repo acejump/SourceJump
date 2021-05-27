@@ -1,10 +1,9 @@
 import org.gradle.api.JavaVersion.VERSION_11
 import org.jetbrains.changelog.*
-import org.jetbrains.intellij.tasks.PublishTask
 
 plugins {
-  id("org.jetbrains.intellij") version "0.7.2"
-  kotlin("jvm") version "1.5.0-RC"
+  id("org.jetbrains.intellij") version "1.0"
+  kotlin("jvm") version "1.5.20-M1"
   id("org.jetbrains.changelog") version "1.1.2"
   id("com.github.ben-manes.versions") version "0.38.0"
 }
@@ -16,13 +15,13 @@ repositories.mavenCentral()
 
 dependencies {
   implementation(kotlin("stdlib"))
-  implementation("org.kohsuke:github-api:1.127")
+  implementation("org.kohsuke:github-api:1.129")
 //  implementation("info.debatty:java-string-similarity:2.0.0")
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-  version = "2021.1"
+  version.set("2021.1")
 }
 
 changelog {
@@ -38,14 +37,14 @@ tasks {
     kotlinOptions.jvmTarget = VERSION_11.toString()
   }
 
-  withType<PublishTask> {
+  publishPlugin {
     val intellijPublishToken: String? by project
-    token(intellijPublishToken)
+    token.set(intellijPublishToken)
   }
 
   patchPluginXml {
-    sinceBuild("203.7717.56")
-    changeNotes(closure {
+    sinceBuild.set("203.7717.56")
+    changeNotes.set(provider {
       changelog.getAll().values.take(2).last().toHTML()
     })
   }
