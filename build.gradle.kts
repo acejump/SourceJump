@@ -27,7 +27,7 @@ intellij {
 changelog {
   version.set("0.0.1")
   path.set("${project.projectDir}/CHANGES.md")
-  header.set(closure { "[${project.version}] - ${date()}" })
+  header.set(provider { "[${project.version}] - ${date()}" })
   itemPrefix.set("-")
   unreleasedTerm.set("Unreleased")
 }
