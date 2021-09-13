@@ -25,11 +25,11 @@ intellij {
 }
 
 changelog {
-  version = "0.0.1"
-  path = "${project.projectDir}/CHANGES.md"
-  header = closure { "[${project.version}] - ${date()}" }
-  itemPrefix = "-"
-  unreleasedTerm = "Unreleased"
+  version.set("0.0.1")
+  path.set("${project.projectDir}/CHANGES.md")
+  header.set(closure { "[${project.version}] - ${date()}" })
+  itemPrefix.set("-")
+  unreleasedTerm.set("Unreleased")
 }
 
 tasks {
