@@ -6,7 +6,7 @@ import com.intellij.openapi.components.*
   name = "SJConfig",
   storages = [(Storage("\$APP_CONFIG\$/SourceJump.xml"))]
 )
-class SJConfig: PersistentStateComponent<SJSettings> {
+class SJConfig : PersistentStateComponent<SJSettings> {
   private var settings = SJSettings()
 
   companion object {

@@ -3,7 +3,7 @@ package org.sourcejump.config
 import com.intellij.openapi.options.Configurable
 import org.sourcejump.config.SJConfig.Companion.settings
 
-class SJConfigurable: Configurable {
+class SJConfigurable : Configurable {
   private val panel by lazy(::SJSettingsPanel)
 
   override fun getDisplayName() = "SourceJump"

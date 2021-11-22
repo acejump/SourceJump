@@ -2,8 +2,7 @@ package org.sourcejump
 
 import com.intellij.find.*
 import com.intellij.notification.*
-import com.intellij.notification.NotificationType.INFORMATION
-import com.intellij.notification.NotificationType.WARNING
+import com.intellij.notification.NotificationType.*
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR
 import com.intellij.openapi.application.runInEdt
@@ -11,7 +10,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.project.*
 import java.io.File
 
-class SourceJumpAction: DumbAwareAction() {
+class SourceJumpAction : DumbAwareAction() {
   fun Project.notify(
     content: String?,
     type: NotificationType = INFORMATION
@@ -57,7 +56,7 @@ class SourceJumpAction: DumbAwareAction() {
     Thread { runSearch(query, ext, project) }.start()
   }
 
-  fun runSearch(query: String, ext: String, project: Project?)  {
+  fun runSearch(query: String, ext: String, project: Project?) {
     val queryDir = File("$tempDir/${query.hashCode()}/")
     if (!queryDir.exists()) {
 

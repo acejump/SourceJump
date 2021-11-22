@@ -4,8 +4,7 @@ import com.intellij.openapi.ui.ComboBox
 import com.intellij.ui.ColorPanel
 import com.intellij.ui.components.JBTextField
 import com.intellij.ui.layout.*
-import com.intellij.ui.layout.GrowPolicy.MEDIUM_TEXT
-import com.intellij.ui.layout.GrowPolicy.SHORT_TEXT
+import com.intellij.ui.layout.GrowPolicy.*
 import java.awt.Color
 import javax.swing.*
 import javax.swing.text.JTextComponent
@@ -76,7 +75,7 @@ class SJSettingsPanel {
     item: T
   ) = setSelectedItem(item)
 
-  private inline fun <reified T: Enum<T>> ComboBox<T>.setupEnumItems(crossinline onChanged: (T) -> Unit) {
+  private inline fun <reified T : Enum<T>> ComboBox<T>.setupEnumItems(crossinline onChanged: (T) -> Unit) {
     T::class.java.enumConstants.forEach(this::addItem)
     addActionListener { onChanged(selectedItem as T) }
   }
