@@ -2,10 +2,10 @@ import org.gradle.api.JavaVersion.VERSION_11
 import org.jetbrains.changelog.*
 
 plugins {
-  id("org.jetbrains.intellij") version "1.3.0"
-  kotlin("jvm") version "1.6.0"
+  id("org.jetbrains.intellij") version "1.4.0"
+  kotlin("jvm") version "1.6.20-M1"
   id("org.jetbrains.changelog") version "1.3.1"
-  id("com.github.ben-manes.versions") version "0.39.0"
+  id("com.github.ben-manes.versions") version "0.42.0"
 }
 
 group = "org.sourcejump"
