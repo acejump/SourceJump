@@ -2,8 +2,8 @@ import org.gradle.api.JavaVersion.VERSION_11
 import org.jetbrains.changelog.*
 
 plugins {
-  id("org.jetbrains.intellij") version "1.4.0"
-  kotlin("jvm") version "1.6.20-M1"
+  id("org.jetbrains.intellij") version "1.5.2"
+  kotlin("jvm") version "1.6.20"
   id("org.jetbrains.changelog") version "1.3.1"
   id("com.github.ben-manes.versions") version "0.42.0"
 }
@@ -15,13 +15,13 @@ repositories.mavenCentral()
 
 dependencies {
   implementation(kotlin("stdlib"))
-  implementation("org.kohsuke:github-api:1.135")
+  implementation("org.kohsuke:github-api:1.303")
 //  implementation("info.debatty:java-string-similarity:2.0.0")
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-  version.set("2021.2.3")
+  version.set("2021.3")
 }
 
 changelog {
